@@ -28,47 +28,43 @@ public class MeetingRestController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getMeeting(@PathVariable("id") String id) {
-	     Meeting meeting = meetingService.findById(id);
-	     if (meeting == null) {
-	         return new ResponseEntity(HttpStatus.NOT_FOUND);
-	     }
-	     return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
-	 }
-	
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	 public ResponseEntity<?> createMeeting(@RequestBody Meeting meeting){
-		if (meetingService.findById(meeting.getId())!=null) {
-			return new ResponseEntity(
-			"Unable to create. A meeting with id " + meeting.getId() + " already exist.", HttpStatus.CONFLICT);
-			
+	public ResponseEntity<?> getMeeting(@PathVariable("id") long id) {
+		Meeting meeting = meetingService.findById(id);
+		if (meeting == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
+		return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public ResponseEntity<?> createMeeting(@RequestBody Meeting meeting) {
 		meetingService.create(meeting);
 		return new ResponseEntity<Meeting>(meeting, HttpStatus.CREATED);
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	 public ResponseEntity<?> deleteMeeting(@PathVariable("id") String id){
-	    Meeting meeting = meetingService.findById(id);
-		if (meeting==null) {
+	public ResponseEntity<?> deleteMeeting(@PathVariable("id") long id) {
+		Meeting meeting = meetingService.findById(id);
+		if (meeting == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
-			
+
 		}
 		meetingService.delete(meeting);
 		return new ResponseEntity<Meeting>(HttpStatus.NO_CONTENT);
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateMeeting(@PathVariable("id") String id, @RequestBody Meeting newMeeting){
+	public ResponseEntity<?> updateMeetingTitle(@PathVariable("id") long id, @RequestBody Meeting newMeeting) {
 		Meeting meeting = meetingService.findById(id);
-		if (meeting==null) {
+		if (meeting == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
-			
+
 		}
 		meeting.setTitle(newMeeting.getTitle());
-		meeting.setDescription(newMeeting.getTitle());
-		meeting.setDate(newMeeting.getTitle());
+		meeting.setDescription(newMeeting.getDescription());
+		meeting.setDate(newMeeting.getDate());
 		meetingService.update(meeting);
 		return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
 	}
+
 }
